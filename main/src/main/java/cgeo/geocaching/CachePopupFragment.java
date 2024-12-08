@@ -2,6 +2,7 @@ package cgeo.geocaching;
 
 import cgeo.geocaching.activity.AbstractNavigationBarMapActivity;
 import cgeo.geocaching.activity.Progress;
+import cgeo.geocaching.apps.cache.WhereYouGoApp;
 import cgeo.geocaching.apps.navi.NavigationAppFactory;
 import cgeo.geocaching.databinding.PopupBinding;
 import cgeo.geocaching.enumerations.CacheListType;
@@ -24,9 +25,6 @@ import cgeo.geocaching.utils.EmojiUtils;
 import cgeo.geocaching.utils.Log;
 import cgeo.geocaching.utils.MapMarkerUtils;
 import cgeo.geocaching.utils.TextUtils;
-import cgeo.geocaching.wherigo.WherigoActivity;
-import cgeo.geocaching.wherigo.WherigoUtils;
-import cgeo.geocaching.wherigo.WherigoViewUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -46,7 +44,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -162,13 +159,11 @@ public class CachePopupFragment extends AbstractDialogFragmentWithProximityNotif
             });
 
             // Wherigo
-            final List<String> wherigoGuis = WherigoUtils.getWherigoGuids(cache);
-            if (!wherigoGuis.isEmpty()) {
-                binding.sendToWherigo.setVisibility(View.VISIBLE);
-                binding.sendToWherigo.setOnClickListener(v -> WherigoViewUtils.executeForOneCartridge(requireActivity(), wherigoGuis, guid ->
-                        WherigoActivity.startForGuid(requireActivity(), guid, cache.getGeocode(), true)));
+            if (WhereYouGoApp.isWherigo(cache)) {
+                binding.sendToWhereyougo.setVisibility(View.VISIBLE);
+                CacheUtils.setWherigoLink(requireActivity(), cache, binding.sendToWhereyougo);
             } else {
-                binding.sendToWherigo.setVisibility(View.GONE);
+                binding.sendToWhereyougo.setVisibility(View.GONE);
             }
 
             // ALC

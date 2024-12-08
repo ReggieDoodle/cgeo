@@ -119,7 +119,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <!-- Internal Wherigo player box -->
+        <!-- Internal WherIGo player box -->
 
         <LinearLayout
             android:id="@+id/wherigo_box"

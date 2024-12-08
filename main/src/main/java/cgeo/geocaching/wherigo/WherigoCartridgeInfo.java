@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -138,19 +137,19 @@ public class WherigoCartridgeInfo {
     }
 
     public static WherigoCartridgeInfo getCartridgeForCGuid(final String cguid) {
-        final List<WherigoCartridgeInfo> cartridges = getAvailableCartridges(guid -> Objects.equals(cguid, guid));
+        final List<WherigoCartridgeInfo> cartridges = getAvailableCartridges(wci -> wci.getCGuid().equals(cguid));
         return cartridges.isEmpty() ? null : cartridges.get(0);
     }
 
-    public static List<WherigoCartridgeInfo> getAvailableCartridges(final Predicate<String> guidFilter) {
+    public static List<WherigoCartridgeInfo> getAvailableCartridges(final Predicate<WherigoCartridgeInfo> filter) {
         final List<ContentStorage.FileInformation> candidates = ContentStorage.get().list(getCartridgeFolder()).stream()
                 .filter(fi -> fi.name.endsWith(".gwc")).collect(Collectors.toList());
         final List<WherigoCartridgeInfo> result = new ArrayList<>(candidates.size());
         for (ContentStorage.FileInformation candidate : candidates) {
-            if (guidFilter != null && !guidFilter.test(getGuid(candidate))) {
-                continue;
+            final WherigoCartridgeInfo info = new WherigoCartridgeInfo(candidate, true, false);
+            if (filter == null || filter.test(info)) {
+                result.add(info);
             }
-            result.add(new WherigoCartridgeInfo(candidate, true, false));
         }
         return result;
     }
