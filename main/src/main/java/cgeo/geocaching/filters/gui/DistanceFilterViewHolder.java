@@ -1,16 +1,23 @@
 package cgeo.geocaching.filters.gui;
 
 import cgeo.geocaching.R;
+import cgeo.geocaching.databinding.EditwaypointActivityBinding;
 import cgeo.geocaching.filters.core.DistanceGeocacheFilter;
+import cgeo.geocaching.location.Geopoint;
 import cgeo.geocaching.location.GeopointFormatter;
 import cgeo.geocaching.location.GeopointParser;
 import cgeo.geocaching.location.IConversion;
+import cgeo.geocaching.models.CalculatedCoordinate;
+import cgeo.geocaching.models.CoordinateInputData;
 import cgeo.geocaching.settings.Settings;
 import cgeo.geocaching.ui.ContinuousRangeSlider;
 import cgeo.geocaching.ui.TextParam;
 import cgeo.geocaching.ui.ViewUtils;
+import cgeo.geocaching.ui.dialog.CoordinatesInputDialog;
 import static cgeo.geocaching.ui.ViewUtils.dpToPixel;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +25,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.button.MaterialButton;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeocacheFilter> {
+import java.util.Objects;
+
+public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeocacheFilter> implements CoordinatesInputDialog.CoordinateUpdate {
 
 
     private final int maxDistance = Settings.useImperialUnits() ? Math.round(500f / IConversion.MILES_TO_KILOMETER) : 500;
@@ -30,8 +43,12 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     private CheckBox useCurrentPosition;
     private EditText coordinate;
 
+    private Geopoint coords;
+
     @Override
     public View createView() {
+
+
 
         final LinearLayout ll = new LinearLayout(getActivity());
         ll.setOrientation(LinearLayout.VERTICAL);
@@ -80,4 +97,33 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
         filter.setMinMaxRange(range.left, range.right , 0f, (float) maxDistance, value -> (float) Math.round(value * conversion));
         return filter;
     }
+
+    private void setCoordinates() {
+
+        final Activity activity = this.getActivity();
+        final FragmentManager fm = activity.getFragmentManager();
+
+        final CoordinateInputData cid = new CoordinateInputData();
+        cid.setGeopoint(this.coords);
+
+        CoordinatesInputDialog.show(fm, cid);
+
+        /*CoordinatesInputDialog.show(fm, null, coords);*/
+    }
+
+    // Implementation of CoordinateUpdate
+
+    @Override
+    public void updateCoordinates(@Nullable final Geopoint gp) {
+        this.coords = gp;
+    }
+    @Override
+    public void updateCoordinates(CoordinateInputData coordinateInputData) {
+
+    }
+    @Override
+    public boolean supportsCalculatedCoordinates() { return false; }
+    @Override
+    public boolean supportsNullCoordinates() { return true; }
+
 }
