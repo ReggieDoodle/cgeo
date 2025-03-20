@@ -1,6 +1,8 @@
 package cgeo.geocaching.filters.gui;
 
+import cgeo.geocaching.AboutActivity;
 import cgeo.geocaching.R;
+import cgeo.geocaching.activity.AbstractActivity;
 import cgeo.geocaching.databinding.EditwaypointActivityBinding;
 import cgeo.geocaching.filters.core.DistanceGeocacheFilter;
 import cgeo.geocaching.location.Geopoint;
@@ -21,6 +23,7 @@ import android.app.FragmentManager;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,7 +46,9 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     private CheckBox useCurrentPosition;
     private EditText coordinate;
 
-    private Geopoint coords;
+    private Geopoint coords = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
+
+    private Button setCoordsButton;
 
     @Override
     public View createView() {
@@ -76,6 +81,10 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
         llp.setMargins(0, dpToPixel(5), 0, dpToPixel(20));
         ll.addView(slider, llp);
 
+        setCoordsButton = ViewUtils.createButton(getActivity(), ll, TextParam.id(R.string.cache_filter_distance_coordinates), R.layout.button_view);
+        setCoordsButton.setOnClickListener(v -> setCoordinates());
+        ll.addView(setCoordsButton);
+
         return ll;
     }
 
@@ -99,31 +108,28 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     }
 
     private void setCoordinates() {
+        // Pop up a coordinate entry box
+        final AbstractActivity activity = (AbstractActivity)this.getActivity();
+        final androidx.fragment.app.FragmentManager fm = activity.getSupportFragmentManager();
 
-        final Activity activity = this.getActivity();
-        final FragmentManager fm = activity.getFragmentManager();
-
-        final CoordinateInputData cid = new CoordinateInputData();
-        cid.setGeopoint(this.coords);
-
-        CoordinatesInputDialog.show(fm, cid);
-
-        /*CoordinatesInputDialog.show(fm, null, coords);*/
+        CoordinatesInputDialog.show(fm, null, coords);
     }
 
     // Implementation of CoordinateUpdate
 
     @Override
     public void updateCoordinates(@Nullable final Geopoint gp) {
+        // Called when dialog closes
+        // pass coordinate into filter
+
         this.coords = gp;
     }
-    @Override
-    public void updateCoordinates(CoordinateInputData coordinateInputData) {
 
-    }
     @Override
     public boolean supportsCalculatedCoordinates() { return false; }
     @Override
-    public boolean supportsNullCoordinates() { return true; }
+    public boolean supportsNullCoordinates() {
+        return false;
+    }
 
 }
