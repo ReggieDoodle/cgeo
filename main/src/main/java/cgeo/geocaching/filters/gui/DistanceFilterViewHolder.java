@@ -1,26 +1,19 @@
 package cgeo.geocaching.filters.gui;
 
-import cgeo.geocaching.AboutActivity;
 import cgeo.geocaching.R;
-import cgeo.geocaching.activity.AbstractActivity;
-import cgeo.geocaching.databinding.EditwaypointActivityBinding;
 import cgeo.geocaching.filters.core.DistanceGeocacheFilter;
 import cgeo.geocaching.location.Geopoint;
 import cgeo.geocaching.location.GeopointFormatter;
 import cgeo.geocaching.location.GeopointParser;
 import cgeo.geocaching.location.IConversion;
-import cgeo.geocaching.models.CalculatedCoordinate;
-import cgeo.geocaching.models.CoordinateInputData;
 import cgeo.geocaching.settings.Settings;
 import cgeo.geocaching.ui.ContinuousRangeSlider;
 import cgeo.geocaching.ui.TextParam;
 import cgeo.geocaching.ui.ViewUtils;
-import cgeo.geocaching.ui.dialog.CoordinatesInputDialog;
+import cgeo.geocaching.ui.dialog.DavesCoordsDialog;
 import static cgeo.geocaching.ui.ViewUtils.dpToPixel;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +24,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import com.google.android.material.button.MaterialButton;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-
-import java.util.Objects;
 
 public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeocacheFilter> {
 
@@ -110,26 +97,8 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     }
 
     private void setCoordinates() {
-        // Pop up a coordinate entry box
 
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View dialogView = inflater.inflate(R.layout.daves_custom_dialog, null);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(dialogView);
-
-        AlertDialog dialog = builder.create();
+        DavesCoordsDialog dialog = new DavesCoordsDialog(getActivity());
         dialog.show();
-
-        // Access views in the custom layout
-        TextView title = dialogView.findViewById(R.id.dialogTitle);
-        EditText input = dialogView.findViewById(R.id.dialogInput);
-        Button button = dialogView.findViewById(R.id.dialogButton);
-
-        // Set button click listener
-        button.setOnClickListener(v -> {
-            String userInput = input.getText().toString();
-            title.setText("You entered: " + userInput);
-        });
     }
 }
