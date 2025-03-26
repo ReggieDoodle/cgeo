@@ -13,7 +13,9 @@ import cgeo.geocaching.ui.ViewUtils;
 import cgeo.geocaching.ui.dialog.DavesCoordsDialog;
 import static cgeo.geocaching.ui.ViewUtils.dpToPixel;
 
+import android.content.Context;
 import android.util.Pair;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,10 +34,7 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
 
     private ContinuousRangeSlider slider;
     private CheckBox useCurrentPosition;
-    private EditText coordinate;
-
     private Geopoint location = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
-
     private Button setCoordsButton;
 
     @Override
@@ -48,9 +47,13 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
         useCurrentPosition = ViewUtils.addCheckboxItem(getActivity(), ll, TextParam.id(R.string.cache_filter_distance_use_current_position), R.drawable.ic_menu_mylocation, null);
         useCurrentPosition.setChecked(true);
 
-        final Pair<View, EditText> coordField = ViewUtils.createTextField(getActivity(), null, TextParam.id(R.string.cache_filter_distance_coordinates), null, -1, 1, 1);
-        coordinate = coordField.second;
-        ll.addView(coordField.first);
+        setCoordsButton = ViewUtils.createButton(getActivity(), ll, TextParam.id(R.string.cache_filter_distance_coordinates));
+        setCoordsButton.setLines(2);
+        setCoordsButton.setSingleLine(false);
+        setCoordsButton.setTextSize(16);
+        ViewUtils.setCoordinates(location, setCoordsButton);
+        setCoordsButton.setOnClickListener(v -> setCoordinates());
+        ll.addView(setCoordsButton);
 
         slider = new ContinuousRangeSlider(getActivity());
         slider.setScale(-0.2f, maxDistance + 0.2f, f -> {
@@ -68,17 +71,13 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
         llp.setMargins(0, dpToPixel(5), 0, dpToPixel(20));
         ll.addView(slider, llp);
 
-        setCoordsButton = ViewUtils.createButton(getActivity(), ll, TextParam.id(R.string.cache_filter_distance_coordinates), R.layout.button_view);
-        setCoordsButton.setOnClickListener(v -> setCoordinates());
-        ll.addView(setCoordsButton);
-
         return ll;
     }
 
     @Override
     public void setViewFromFilter(final DistanceGeocacheFilter filter) {
         useCurrentPosition.setChecked(filter.isUseCurrentPosition());
-        coordinate.setText(filter.getCoordinate() == null ? "" : GeopointFormatter.format(GeopointFormatter.Format.LAT_LON_DECMINUTE, filter.getCoordinate()));
+        location = filter.getCoordinate();
         slider.setRange(
                 filter.getMinRangeValue() == null ? -10f : filter.getMinRangeValue() / conversion,
                 filter.getMaxRangeValue() == null ? maxDistance + 500f : filter.getMaxRangeValue() / conversion);
@@ -88,20 +87,19 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     public DistanceGeocacheFilter createFilterFromView() {
         final DistanceGeocacheFilter filter = createFilter();
         filter.setUseCurrentPosition(useCurrentPosition.isChecked());
-        filter.setCoordinate(GeopointParser.parse(coordinate.getText().toString(), null));
+        filter.setCoordinate(location);
         final ImmutablePair<Float, Float> range = slider.getRange();
         filter.setMinMaxRange(range.left, range.right , 0f, (float) maxDistance, value -> (float) Math.round(value * conversion));
         return filter;
     }
 
     private void setCoordinates() {
-
         DavesCoordsDialog dialog = new DavesCoordsDialog(getActivity(), this::onDialogClosed);
         dialog.show(location);
     }
 
     public void onDialogClosed(String input, String selectedOption) {
-        // Handle the data from the dialog
+        // Handle the data from the dialog - temp parse it until full UI is in place
         this.location = GeopointParser.parse(input, null);
     }
 }

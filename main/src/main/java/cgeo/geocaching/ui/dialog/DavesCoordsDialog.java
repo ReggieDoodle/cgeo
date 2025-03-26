@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import cgeo.geocaching.R;
 import cgeo.geocaching.location.Geopoint;
+import cgeo.geocaching.ui.ViewUtils;
 
 public class DavesCoordsDialog {
     private final Context context;
@@ -32,6 +33,8 @@ public class DavesCoordsDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(dialogView);
 
+
+
         AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -41,11 +44,18 @@ public class DavesCoordsDialog {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        // Populate the text fields
         EditText inputLatitude = dialogView.findViewById(R.id.dialogInputLatitude);
         EditText inputLongitude = dialogView.findViewById(R.id.dialogInputLongitude);
 
-        // Add logic to the button
+
+        inputLatitude.setText(String.valueOf(location.getLatitude()));
+        inputLongitude.setText(String.valueOf(location.getLongitude()));
+
+
+        // Add logic to the button to read the coordinates
         Button button = dialogView.findViewById(R.id.dialogButton);
+
         button.setOnClickListener(v -> {
             String userInputLatitude = inputLatitude.getText().toString();
             String userInputLongitude = inputLongitude.getText().toString();
@@ -59,7 +69,6 @@ public class DavesCoordsDialog {
                 dialog.dismiss();
             }
         });
-
     }
 }
 
