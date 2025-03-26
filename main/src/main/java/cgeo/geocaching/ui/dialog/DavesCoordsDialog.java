@@ -5,18 +5,25 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import cgeo.geocaching.R;
+import cgeo.geocaching.location.Geopoint;
 
 public class DavesCoordsDialog {
     private final Context context;
+    private final DialogCallback callback;
 
-    public DavesCoordsDialog(Context context) {
+    public DavesCoordsDialog(Context context, DialogCallback callback) {
         this.context = context;
+        this.callback = callback;
     }
 
-    public void show() {
+    public void show(Geopoint location) {
+
         // Inflate the custom layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.daves_coords_dialog, null);
@@ -34,5 +41,25 @@ public class DavesCoordsDialog {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        EditText inputLatitude = dialogView.findViewById(R.id.dialogInputLatitude);
+        EditText inputLongitude = dialogView.findViewById(R.id.dialogInputLongitude);
+
+        // Add logic to the button
+        Button button = dialogView.findViewById(R.id.dialogButton);
+        button.setOnClickListener(v -> {
+            String userInputLatitude = inputLatitude.getText().toString();
+            String userInputLongitude = inputLongitude.getText().toString();
+            String selectedOption = spinner.getSelectedItem().toString();
+
+            if (userInputLatitude.isEmpty() || userInputLongitude.isEmpty()) {
+                Toast.makeText(context, "Please enter something!", Toast.LENGTH_SHORT).show();
+            } else {
+                // Invoke the callback to notify that the dialog is closed
+                callback.onDialogClosed(userInputLatitude + " " + userInputLongitude, selectedOption);
+                dialog.dismiss();
+            }
+        });
+
     }
 }
+

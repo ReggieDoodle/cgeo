@@ -13,16 +13,14 @@ import cgeo.geocaching.ui.ViewUtils;
 import cgeo.geocaching.ui.dialog.DavesCoordsDialog;
 import static cgeo.geocaching.ui.ViewUtils.dpToPixel;
 
-import android.app.AlertDialog;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -36,7 +34,7 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     private CheckBox useCurrentPosition;
     private EditText coordinate;
 
-    private Geopoint coords = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
+    private Geopoint location = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
 
     private Button setCoordsButton;
 
@@ -98,7 +96,12 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
 
     private void setCoordinates() {
 
-        DavesCoordsDialog dialog = new DavesCoordsDialog(getActivity());
-        dialog.show();
+        DavesCoordsDialog dialog = new DavesCoordsDialog(getActivity(), this::onDialogClosed);
+        dialog.show(location);
+    }
+
+    public void onDialogClosed(String input, String selectedOption) {
+        // Handle the data from the dialog
+        this.location = GeopointParser.parse(input, null);
     }
 }
