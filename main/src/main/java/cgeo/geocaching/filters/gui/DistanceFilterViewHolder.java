@@ -34,7 +34,7 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
 
     private ContinuousRangeSlider slider;
     private CheckBox useCurrentPosition;
-    private Geopoint location = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
+    private Geopoint location = new Geopoint(33.3,-111.1); // DUMMY FOR TESTING
     private Button setCoordsButton;
 
     @Override
@@ -81,8 +81,9 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
             location = filter.getCoordinate();
         }
         else {
-            location = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
+            location = new Geopoint(33.3,-111.1); // DUMMY FOR TESTING
         }
+        ViewUtils.setCoordinates(location, setCoordsButton);
         slider.setRange(
                 filter.getMinRangeValue() == null ? -10f : filter.getMinRangeValue() / conversion,
                 filter.getMaxRangeValue() == null ? maxDistance + 500f : filter.getMaxRangeValue() / conversion);
@@ -106,5 +107,6 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     public void onDialogClosed(String input, String selectedOption) {
         // Handle the data from the dialog - temp parse it until full UI is in place
         this.location = GeopointParser.parse(input, null);
+        ViewUtils.setCoordinates(location, setCoordsButton);
     }
 }
