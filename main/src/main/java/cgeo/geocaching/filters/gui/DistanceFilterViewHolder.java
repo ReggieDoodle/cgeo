@@ -77,7 +77,12 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
     @Override
     public void setViewFromFilter(final DistanceGeocacheFilter filter) {
         useCurrentPosition.setChecked(filter.isUseCurrentPosition());
-        location = filter.getCoordinate();
+        if (filter.getCoordinate() != null) {
+            location = filter.getCoordinate();
+        }
+        else {
+            location = new Geopoint(37.4,-112.1); // DUMMY FOR TESTING
+        }
         slider.setRange(
                 filter.getMinRangeValue() == null ? -10f : filter.getMinRangeValue() / conversion,
                 filter.getMaxRangeValue() == null ? maxDistance + 500f : filter.getMaxRangeValue() / conversion);
