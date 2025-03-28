@@ -50,6 +50,7 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
         setCoordsButton = ViewUtils.createButton(getActivity(), ll, TextParam.id(R.string.cache_filter_distance_coordinates));
         setCoordsButton.setLines(2);
         setCoordsButton.setSingleLine(false);
+        setCoordsButton.setPadding(dpToPixel(10), dpToPixel(10), dpToPixel(10), dpToPixel(10));
         setCoordsButton.setTextSize(16);
         ViewUtils.setCoordinates(location, setCoordsButton);
         setCoordsButton.setOnClickListener(v -> setCoordinates());
@@ -104,7 +105,7 @@ public class DistanceFilterViewHolder extends BaseFilterViewHolder<DistanceGeoca
         dialog.show(location);
     }
 
-    public void onDialogClosed(String input, String selectedOption) {
+    public void onDialogClosed(String input) {
         // Handle the data from the dialog - temp parse it until full UI is in place
         this.location = GeopointParser.parse(input, null);
         ViewUtils.setCoordinates(location, setCoordsButton);

@@ -45,8 +45,8 @@ public class DavesCoordsDialog {
         spinner.setAdapter(adapter);
 
         // Populate the text fields
-        EditText inputLatitude = dialogView.findViewById(R.id.dialogInputLatitude);
-        EditText inputLongitude = dialogView.findViewById(R.id.dialogInputLongitude);
+        EditText inputLatitude = dialogView.findViewById(R.id.latitude);
+        EditText inputLongitude = dialogView.findViewById(R.id.longitude);
 
 
         inputLatitude.setText(String.valueOf(location.getLatitude()));
@@ -54,18 +54,17 @@ public class DavesCoordsDialog {
 
 
         // Add logic to the button to read the coordinates
-        Button button = dialogView.findViewById(R.id.dialogButton);
+        Button button = dialogView.findViewById(R.id.commitButton);
 
         button.setOnClickListener(v -> {
             String userInputLatitude = inputLatitude.getText().toString();
             String userInputLongitude = inputLongitude.getText().toString();
-            String selectedOption = spinner.getSelectedItem().toString();
 
             if (userInputLatitude.isEmpty() || userInputLongitude.isEmpty()) {
                 Toast.makeText(context, "Please enter something!", Toast.LENGTH_SHORT).show();
             } else {
                 // Invoke the callback to notify that the dialog is closed
-                callback.onDialogClosed(userInputLatitude + " " + userInputLongitude, selectedOption);
+                callback.onDialogClosed(userInputLatitude + " " + userInputLongitude);
                 dialog.dismiss();
             }
         });
