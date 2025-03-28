@@ -11,21 +11,35 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import cgeo.geocaching.R;
 import cgeo.geocaching.location.Geopoint;
-import cgeo.geocaching.ui.ViewUtils;
+import cgeo.geocaching.sensors.LocationDataProvider;
+
 
 // A recreation of the existing coordinate dialog
 public class DavesCoordsDialog {
     private final Context context;
     private final DialogCallback callback;
 
+    private Button bLatitude, bLongitude;
+    private Geopoint gp;
+
     public DavesCoordsDialog(Context context, DialogCallback callback) {
         this.context = context;
         this.callback = callback;
+
+    }
+
+    @NonNull
+    private static Geopoint currentCoords() {
+        return LocationDataProvider.getInstance().currentGeo().getCoords();
     }
 
     public void show(Geopoint location) {
+
+        gp = location;
 
         LayoutInflater inflater = LayoutInflater.from(context);
         final View theView = inflater.inflate(R.layout.daves_coords_dialog, null);
@@ -60,9 +74,27 @@ public class DavesCoordsDialog {
         EditText inputLatitude = theView.findViewById(R.id.latitude);
         EditText inputLongitude = theView.findViewById(R.id.longitude);
 
-        inputLatitude.setText(String.valueOf(location.getLatitude()));
-        inputLongitude.setText(String.valueOf(location.getLongitude()));
+        inputLatitude.setText(String.valueOf(gp.getLatitude()));
+        inputLongitude.setText(String.valueOf(gp.getLongitude()));
 
+        bLatitude = theView.findViewById(R.id.hemisphereLatitude);
+        bLongitude = theView.findViewById(R.id.hemisphereLongitude);
+
+        bLatitude.setOnClickListener(v -> {
+            final CharSequence text = bLatitude.getText();
+            if (text.equals("N"))
+                bLatitude.setText("S");
+            else
+                bLatitude.setText("N");
+        });
+
+        bLongitude.setOnClickListener(v -> {
+                    final CharSequence text = bLongitude.getText();
+                    if (text.equals("E"))
+                        bLongitude.setText("W");
+                    else
+                        bLongitude.setText("E");
+        });
 
         // Add logic to the button to read the coordinates
         Button button = theView.findViewById(R.id.commitButton);
@@ -82,6 +114,14 @@ public class DavesCoordsDialog {
     }
 
     private void UpdateGui(View v, String selectedOption) {
+
+        if (gp != null) {
+            bLatitude.setText(String.valueOf(gp.getLatDir()));
+            bLongitude.setText(String.valueOf(gp.getLonDir()));
+        } else {
+            bLatitude.setText(String.valueOf(currentCoords().getLatDir()));
+            bLongitude.setText(String.valueOf(currentCoords().getLonDir()));
+        }
 
         switch (selectedOption) {
             case "DD MM.MMM":
