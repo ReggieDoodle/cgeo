@@ -49,9 +49,8 @@
 			android:layout_height="wrap_content"
 			android:orientation="horizontal">
 
-
 				<Button
-					android:id="@+id/hemisphere"
+					android:id="@+id/hemisphereLatitude"
 					style="@style/button_letter"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
@@ -59,7 +58,7 @@
 					android:layout_weight="1" />
 
 				<EditText
-					android:id="@+id/EditTextLatDeg"
+					android:id="@+id/EditTextLatDegrees"
 					android:layout_width="0dp"
 					android:inputType="number"
 					android:layout_height="wrap_content"
@@ -68,7 +67,15 @@
 					android:layout_weight="2"/>
 
 				<EditText
-					android:id="@+id/EditTextLatMin"
+					android:id="@+id/EditTextLatMinutes"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:layout_weight="2"
+					tools:ignore="LabelFor" />
+					
+				<EditText
+					android:id="@+id/EditTextLatSeconds"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
@@ -76,7 +83,54 @@
 					tools:ignore="LabelFor" />
 
 				<EditText
-					android:id="@+id/EditTextLatMinFrac"
+					android:id="@+id/EditTextLatFraction"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:layout_weight="3"
+					tools:ignore="LabelFor" />
+		</LinearLayout>
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+				<Button
+					android:id="@+id/hemisphereLongitude"
+					style="@style/button_letter"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/textSize_inputCoords"
+					android:layout_weight="1" />
+
+				<EditText
+					android:id="@+id/EditTextLonDegrees"
+					android:layout_width="0dp"
+					android:inputType="number"
+					android:layout_height="wrap_content"
+					android:hint="@string/cc_hint_degrees"
+					android:gravity="right"
+					android:layout_weight="2"/>
+
+				<EditText
+					android:id="@+id/EditTextLonMinutes"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:layout_weight="2"
+					tools:ignore="LabelFor" />
+					
+				<EditText
+					android:id="@+id/EditTextLonSeconds"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:layout_weight="2"
+					tools:ignore="LabelFor" />
+
+				<EditText
+					android:id="@+id/EditTextLonFraction"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
