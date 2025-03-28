@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -25,10 +26,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:background="@drawable/border"
-		android:layout_marginTop="10dp" 
+		android:layout_marginTop="10dp"
 		android:orientation="vertical"
 		android:padding="15dp">
-		
+
 		<EditText
         android:id="@+id/latitude"
         android:layout_width="match_parent"
@@ -42,9 +43,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Longitude" />
-		
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+
+				<Button
+					android:id="@+id/hemisphere"
+					style="@style/button_letter"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/textSize_inputCoords"
+					android:layout_weight="1" />
+
+				<EditText
+					android:id="@+id/EditTextLatDeg"
+					android:layout_width="0dp"
+					android:inputType="number"
+					android:layout_height="wrap_content"
+					android:hint="@string/cc_hint_degrees"
+					android:gravity="right"
+					android:layout_weight="2"/>
+
+				<EditText
+					android:id="@+id/EditTextLatMin"
+					android:layout_width="dp"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:layout_weight="2"
+					tools:ignore="LabelFor" />
+
+				<EditText
+					android:id="@+id/EditTextLatMinFrac"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:layout_weight="3"
+					tools:ignore="LabelFor" />
+		</LinearLayout>
+
 	</LinearLayout>
-   
+
 
     <Button
         android:id="@+id/commitButton"
