@@ -58,7 +58,7 @@
 					android:layout_weight="2" />
 
 				<EditText
-					android:id="@+id/EditTextLatDegrees"
+					android:id="@+id/editTextLatDegrees"
 					android:layout_width="0dp"
 					android:inputType="number"
 					android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
 					android:layout_weight="3"/>
 
 				<EditText
-					android:id="@+id/EditTextLatMinutes"
+					android:id="@+id/editTextLatMinutes"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
@@ -75,7 +75,7 @@
 					tools:ignore="LabelFor" />
 					
 				<EditText
-					android:id="@+id/EditTextLatSeconds"
+					android:id="@+id/editTextLatSeconds"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
@@ -83,7 +83,7 @@
 					tools:ignore="LabelFor" />
 
 				<EditText
-					android:id="@+id/EditTextLatFraction"
+					android:id="@+id/editTextLatFraction"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
@@ -105,7 +105,7 @@
 					android:layout_weight="2" />
 
 				<EditText
-					android:id="@+id/EditTextLonDegrees"
+					android:id="@+id/editTextLonDegrees"
 					android:layout_width="0dp"
 					android:inputType="number"
 					android:layout_height="wrap_content"
@@ -114,28 +114,25 @@
 					android:layout_weight="3"/>
 
 				<EditText
-					android:id="@+id/EditTextLonMinutes"
+					android:id="@+id/editTextLonMinutes"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
-					android:layout_weight="3"
-					tools:ignore="LabelFor" />
+					android:layout_weight="3" />
 					
 				<EditText
-					android:id="@+id/EditTextLonSeconds"
+					android:id="@+id/editTextLonSeconds"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
-					android:layout_weight="3"
-					tools:ignore="LabelFor" />
+					android:layout_weight="3" />
 
 				<EditText
-					android:id="@+id/EditTextLonFraction"
+					android:id="@+id/editTextLonFraction"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:inputType="number"
-					android:layout_weight="4"
-					tools:ignore="LabelFor" />
+					android:layout_weight="4" />
 		</LinearLayout>
 
 	</LinearLayout>
