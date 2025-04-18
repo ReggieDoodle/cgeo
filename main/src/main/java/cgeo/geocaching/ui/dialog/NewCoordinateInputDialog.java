@@ -1,7 +1,9 @@
 package cgeo.geocaching.ui.dialog;
 
 import cgeo.geocaching.R;
+import cgeo.geocaching.databinding.NewCoordinateInputDialogBinding;
 import cgeo.geocaching.location.Geopoint;
+import cgeo.geocaching.models.Geocache;
 import cgeo.geocaching.sensors.LocationDataProvider;
 import cgeo.geocaching.settings.Settings;
 import cgeo.geocaching.utils.ClipboardUtils;
@@ -45,7 +47,8 @@ public class NewCoordinateInputDialog {
     private EditText latitudeDegree, latitudeMinutes, latitudeSeconds, latitudeFraction;
     private List<EditText> orderedInputs;
     private Button copyFromClipboard, useCurrentLocation;
-    private Geopoint gp;
+    private NewCoordinateInputDialogBinding binding;
+    private Geopoint gp, cacheCoords;
 
     public NewCoordinateInputDialog(final Context context, final DialogCallback callback) {
 
@@ -59,9 +62,21 @@ public class NewCoordinateInputDialog {
         return LocationDataProvider.getInstance().currentGeo().getCoords();
     }
 
+    public void show(final Geopoint location, final Geocache cache) {
+
+        if (cache != null) {
+            cacheCoords = cache.getCoords();
+        }
+        show(location);
+    }
+
     public void show(final Geopoint location) {
 
-        gp = new Geopoint(location.getLatitude(), location.getLongitude());
+        if (location != null) {
+            gp = location;
+        } else {
+            gp = currentCoords();
+        }
 
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View theView = inflater.inflate(R.layout.new_coordinate_input_dialog, null);
