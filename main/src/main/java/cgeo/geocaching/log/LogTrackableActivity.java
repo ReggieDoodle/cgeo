@@ -11,6 +11,7 @@ import cgeo.geocaching.connector.trackable.TrackableLoggingManager;
 import cgeo.geocaching.databinding.LogtrackableActivityBinding;
 import cgeo.geocaching.enumerations.LoadFlags;
 import cgeo.geocaching.location.Geopoint;
+import cgeo.geocaching.location.GeopointParser;
 import cgeo.geocaching.log.LogTemplateProvider.LogContext;
 import cgeo.geocaching.log.LogTemplateProvider.LogTemplate;
 import cgeo.geocaching.models.Geocache;
@@ -22,9 +23,8 @@ import cgeo.geocaching.storage.DataStore;
 import cgeo.geocaching.ui.DateTimeEditor;
 import cgeo.geocaching.ui.TextParam;
 import cgeo.geocaching.ui.TextSpinner;
-import cgeo.geocaching.ui.dialog.CoordinatesInputDialog;
-import cgeo.geocaching.ui.dialog.CoordinatesInputDialog.CoordinateUpdate;
 import cgeo.geocaching.ui.dialog.Dialogs;
+import cgeo.geocaching.ui.dialog.NewCoordinateInputDialog;
 import cgeo.geocaching.ui.dialog.SimpleDialog;
 import cgeo.geocaching.utils.AndroidRxUtils;
 import cgeo.geocaching.utils.Log;
@@ -54,7 +54,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class LogTrackableActivity extends AbstractLoggingActivity implements CoordinateUpdate, LoaderManager.LoaderCallbacks<List<LogTypeTrackable>> {
+public class LogTrackableActivity extends AbstractLoggingActivity implements LoaderManager.LoaderCallbacks<List<LogTypeTrackable>> {
 
     private static final int LOADER_ID_LOGGING_INFO = 409842;
 
@@ -320,7 +320,6 @@ public class LogTrackableActivity extends AbstractLoggingActivity implements Coo
         binding.progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
     }
 
-    @Override
     public void updateCoordinates(final Geopoint geopointIn) {
         if (geopointIn == null) {
             return;
@@ -330,15 +329,16 @@ public class LogTrackableActivity extends AbstractLoggingActivity implements Coo
         geocache.setCoords(geopoint);
     }
 
-    @Override
-    public boolean supportsNullCoordinates() {
-        return false;
-    }
-
     private class CoordinatesListener implements View.OnClickListener {
         @Override
         public void onClick(final View arg0) {
-            CoordinatesInputDialog.show(getSupportFragmentManager(), geocache, geopoint);
+            final NewCoordinateInputDialog dialog = new NewCoordinateInputDialog(arg0.getContext(), this::onCoordinatesUpdated);
+            dialog.show(geopoint, geocache);
+        }
+
+        public void onCoordinatesUpdated(final Geopoint input) {
+
+            updateCoordinates(input);
         }
     }
 

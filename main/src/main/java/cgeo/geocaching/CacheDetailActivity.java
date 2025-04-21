@@ -47,6 +47,7 @@ import cgeo.geocaching.gcvote.VoteDialog;
 import cgeo.geocaching.list.StoredList;
 import cgeo.geocaching.location.Geopoint;
 import cgeo.geocaching.location.GeopointFormatter;
+import cgeo.geocaching.location.GeopointParser;
 import cgeo.geocaching.location.Units;
 import cgeo.geocaching.log.CacheLogsViewCreator;
 import cgeo.geocaching.log.LogCacheActivity;
@@ -86,6 +87,7 @@ import cgeo.geocaching.ui.dialog.CoordinatesInputDialog;
 import cgeo.geocaching.ui.dialog.Dialogs;
 import cgeo.geocaching.ui.dialog.EditNoteDialog;
 import cgeo.geocaching.ui.dialog.EditNoteDialog.EditNoteDialogListener;
+import cgeo.geocaching.ui.dialog.NewCoordinateInputDialog;
 import cgeo.geocaching.ui.dialog.SimpleDialog;
 import cgeo.geocaching.ui.recyclerview.RecyclerViewProvider;
 import cgeo.geocaching.utils.AndroidRxUtils;
@@ -768,7 +770,7 @@ public class CacheDetailActivity extends TabbedViewPagerActivity
         } else if (menuItem == R.id.menu_ignore) {
             ignoreCache();
         } else if (menuItem == R.id.menu_set_coordinates) {
-            setCoordinates();
+            setCoordinates(this);
         } else if (menuItem == R.id.menu_extract_waypoints) {
             final String searchText = cache.getShortDescription() + ' ' + cache.getDescription();
             extractWaypoints(searchText, cache);
@@ -832,12 +834,19 @@ public class CacheDetailActivity extends TabbedViewPagerActivity
         });
     }
 
-    private void setCoordinates() {
+    private void setCoordinates(Activity activity) {
         ensureSaved();
-        final CoordinateInputData cid = new CoordinateInputData();
-        cid.setGeopoint(cache.getCoords());
-        cid.setGeocode(cache.getGeocode());
-        CoordinatesInputDialog.show(getSupportFragmentManager(), cid);
+        final NewCoordinateInputDialog dialog = new NewCoordinateInputDialog(activity, this::onDialogClosed);
+        dialog.show(cache.getCoords());
+    }
+
+    public void onDialogClosed(final Geopoint input) {
+        cache.setCoords(input);
+        if (cache.isOffline()) {
+            storeCache(cache.getLists());
+        } else {
+            storeCache(false);
+        }
     }
 
     private void showVoteDialog() {
@@ -2965,7 +2974,7 @@ public class CacheDetailActivity extends TabbedViewPagerActivity
     }
 
 
-    // methods for implementing CoordinateUpdate interface
+    // methods for implementing CoordinateUpdate interface (redundant)
 
     @Override
     public void updateCoordinates(final Geopoint gp) {
